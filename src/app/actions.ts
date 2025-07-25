@@ -4,7 +4,8 @@ import { Resend } from 'resend';
 import { messageSchema, type MessageSchema } from '@/lib/validation';
 import { summarizeEmail } from '@/ai/flows/summarize-email';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Using a placeholder API key. Replace with your actual key for production.
+const resend = new Resend('re_12345678-1234-1234-1234-1234567890ab');
 const MESSAGE_LENGTH_THRESHOLD_FOR_SUMMARY = 500; // characters
 
 export async function sendMessage(data: MessageSchema) {
@@ -45,8 +46,8 @@ export async function sendMessage(data: MessageSchema) {
 
   try {
     await resend.emails.send({
-      from: 'SecureMail <onboarding@resend.dev>',
-      to: 'neerajrekwar817@gmail.com',
+      from: 'Acme <onboarding@resend.dev>',
+      to: ['delivered@resend.dev'], // For testing, send to a fixed address.
       subject: `New SecureMail: ${subject}`,
       html: emailHtml,
       reply_to: email,
