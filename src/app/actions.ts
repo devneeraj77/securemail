@@ -46,8 +46,8 @@ export async function sendMessage(data: MessageSchema) {
 
   try {
     await resend.emails.send({
-      from: 'Acme <onboarding@resend.dev>',
-      to: ['delivered@resend.dev'], // For testing, send to a fixed address.
+      from: 'SecureMail <dev.neerajrekwar@gmail.com>',
+      to: [email],
       subject: `New SecureMail: ${subject}`,
       html: emailHtml,
       reply_to: email,
