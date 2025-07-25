@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { messageSchema, type MessageSchema } from "@/lib/validation";
-import { sendMessage } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,21 +34,38 @@ export function SecureMailForm() {
 
   async function onSubmit(values: MessageSchema) {
     setIsSubmitting(true);
-    const result = await sendMessage(values);
-    setIsSubmitting(false);
-
-    if (result.success) {
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for your message. We will get back to you shortly.",
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
       });
-      form.reset();
-    } else {
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "Message Sent!",
+          description: "Thank you for your message. We will get back to you shortly.",
+        });
+        form.reset();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: result.error || "There was a problem with your request.",
+        });
+      }
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: result.error || "There was a problem with your request.",
+        description: "There was a problem with your request.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
